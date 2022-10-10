@@ -203,6 +203,12 @@ class SQLAInterface(BaseInterface):
                 column_leaf = get_column_leaf(order_column)
                 _alias = self.get_alias_mapping(root_relation, aliases_mapping)
                 _order_column = getattr(_alias, column_leaf)
+
+            # TODO: changed, not comp. with dotted/decorated? set by remote user?
+            elif not hasattr(self.obj, order_column):
+                from sqlalchemy import text
+                _order_column = text(order_column)
+
             if order_direction == "asc":
                 query = query.order_by(asc(_order_column))
             else:
